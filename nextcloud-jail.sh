@@ -190,9 +190,9 @@ else
 fi
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/www.conf /usr/local/etc/php-fpm.d/
 iocage exec ${JAIL_NAME} cp -f /usr/local/share/mysql/my-small.cnf /var/db/mysql/my.cnf
-iocage exec ${JAIL_NAME} echo "" >> /var/db/mysql/my.cnf
-iocage exec ${JAIL_NAME} echo "[client-server]" >> /var/db/mysql/my.cnf
-iocage exec ${JAIL_NAME} echo "!include /var/db/mysql/db_server_my.cnf" >> /var/db/mysql/my.cnf
+iocage exec ${JAIL_NAME} "echo '' >> /var/db/mysql/my.cnf"
+iocage exec ${JAIL_NAME} "echo '[client-server]' >> /var/db/mysql/my.cnf"
+iocage exec ${JAIL_NAME} "echo '!include /var/db/mysql/db_server_my.cnf' >> /var/db/mysql/my.cnf"
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/db_server_my.cnf /var/db/mysql/db_server_my.cnf
 
 iocage exec ${JAIL_NAME} sed -i '' "s/yourhostnamehere/${HOST_NAME}/" /usr/local/etc/apache24/Includes/${HOST_NAME}.conf
