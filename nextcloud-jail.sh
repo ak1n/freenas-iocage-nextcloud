@@ -149,6 +149,7 @@ __EOF__
 iocage create --name "${JAIL_NAME}" -p /tmp/pkg.json -r ${RELEASE} ip4_addr="${INTERFACE}|${JAIL_IP}/24" defaultrouter="${DEFAULT_GW_IP}" boot="on" host_hostname="${JAIL_NAME}" vnet="${VNET}"
 rm /tmp/pkg.json
 
+#what is up with these chown names?
 mkdir -p ${DB_PATH}/
 chown -R 88:88 ${DB_PATH}/
 mkdir -p ${FILES_PATH}
@@ -200,7 +201,7 @@ fi
 # Copy and edit pre-written config files
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/httpd.conf /usr/local/etc/apache24/httpd.conf
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/php.ini /usr/local/etc/php.ini
-iocage exec ${JAIL_NAME} cp -f /mnt/configs/redis.conf /usr/local/etc/redis.conf
+#iocage exec ${JAIL_NAME} cp -f /mnt/configs/redis.conf /usr/local/etc/redis.conf
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/001_mod_php.conf /usr/local/etc/apache24/modules.d/001_mod_php.conf
 if [ $NO_CERT -eq 1 ]; then
   iocage exec ${JAIL_NAME} cp -f /mnt/configs/nextcloud-nossl.conf /usr/local/etc/apache24/Includes/${HOST_NAME}.conf
@@ -208,11 +209,37 @@ else
   iocage exec ${JAIL_NAME} cp -f /mnt/configs/nextcloud.conf /usr/local/etc/apache24/Includes/${HOST_NAME}.conf
 fi
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/www.conf /usr/local/etc/php-fpm.d/
-iocage exec ${JAIL_NAME} cp -f /usr/local/share/mysql/my-small.cnf /var/db/mysql/my.cnf
-iocage exec ${JAIL_NAME} "echo '' >> /var/db/mysql/my.cnf"
-iocage exec ${JAIL_NAME} "echo '[client-server]' >> /var/db/mysql/my.cnf"
-iocage exec ${JAIL_NAME} "echo '!include /var/db/mysql/db_server_my.cnf' >> /var/db/mysql/my.cnf"
-iocage exec ${JAIL_NAME} cp -f /mnt/configs/db_server_my.cnf /var/db/mysql/db_server_my.cnf
+
+#mariadb/mysql handling
+#iocage exec ${JAIL_NAME} cp -f /usr/local/share/mysql/my-small.cnf /var/db/mysql/my.cnf
+#iocage exec ${JAIL_NAME} "echo '' >> /var/db/mysql/my.cnf"
+#iocage exec ${JAIL_NAME} "echo '[client-server]' >> /var/db/mysql/my.cnf"
+#iocage exec ${JAIL_NAME} "echo '!include /var/db/mysql/db_server_my.cnf' >> /var/db/mysql/my.cnf"
+cp $CONFIGS_PATH/db_server_my.cnf.default db_server_my.cnf
+sed -i '' "s|[[DB_SOCKET]]|/tmp/mysql.sock|" db_server_my.cnf
+sed -i '' "s|[[DB_BASEDIR]]|/usr/local|" db_server_my.cnf
+sed -i '' "s|[[DB_DATADIR]]|/var/db/mysql|" db_server_my.cnf
+sed -i '' "s|[[DB_LC_MESSAGES_DIR]]|/usr/local|"
+sed -i '' "s|[[DB_PID_FILE]]|/var/db/mysql/JAILNAME.pid|" db_server_my.cnf
+
+iocage exec ${JAIL_NAME} cp -f /mnt/configs/db_server_my.cnf /var/db/mysql/my.cnf
+
+#socket
+#  DB_SOCKET="/tmp/mysql.sock"
+#  docker: /var/run/mysqld/mysqld.sock
+#  freenas: /tmp/mysql.sock
+#DB_BASEDIR
+#  docker: /usr
+#  freenas: /usr/local
+#DB_DATADIR
+#  docker: /var/lib/mysql
+#  freenas: /var/db/mysql
+#DB_LC_MESSAGES_DIR
+#  docker: /usr/share/mysql
+#  freenas:
+#DB_PID_FILE
+#  docker: /var/run/mysqld/mysqld.pid
+#  freenas: /var/db/mysql/JAILNAME.pid
 
 iocage exec ${JAIL_NAME} sed -i '' "s/yourhostnamehere/${HOST_NAME}/" /usr/local/etc/apache24/Includes/${HOST_NAME}.conf
 iocage exec ${JAIL_NAME} sed -i '' "s/jailiphere/${JAIL_IP}/" /usr/local/etc/apache24/Includes/${HOST_NAME}.conf
@@ -254,8 +281,9 @@ iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextclou
 iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set loglevel --value="2"'
 iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set logrotate_size --value="104847600"'
 iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set memcache.local --value="\OC\Memcache\APCu"'
-iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis host --value="/tmp/redis.sock"'
-iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis port --value=0 --type=integer'
+#iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis host --value="/tmp/redis.sock"'
+iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis host --value="localhost"'
+iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis port --value=6379 --type=integer'
 iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis timeout --value=0 --type=integer'
 #I am in disbelief that boolean variables are not parsed but rather must be explicitly flagged as booleans for occ - as follows
 iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set filelocking.enabled --value="true" --type=boolean'
