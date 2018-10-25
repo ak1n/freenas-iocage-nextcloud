@@ -217,30 +217,12 @@ iocage exec ${JAIL_NAME} cp -f /mnt/configs/www.conf /usr/local/etc/php-fpm.d/
 #iocage exec ${JAIL_NAME} "echo '[client-server]' >> /var/db/mysql/my.cnf"
 #iocage exec ${JAIL_NAME} "echo '!include /var/db/mysql/db_server_my.cnf' >> /var/db/mysql/my.cnf"
 cp "$CONFIGS_PATH/$DB_CNF.default" $CONFIGS_PATH/$DB_CNF
-sed -i '' "s|\[\[DB_SOCKET\]\]|\/tmp\/mysql.sock|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|\[\[DB_SOCKET\]\]|\/tmp\/mysql.sock|g" $CONFIGS_PATH/$DB_CNF
 sed -i '' "s|\[\[DB_BASEDIR\]\]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
 sed -i '' "s|\[\[DB_DATADIR\]\]|\/var\/db\/mysql|" $CONFIGS_PATH/$DB_CNF
 sed -i '' "s|\[\[DB_LC_MESSAGES_DIR\]\]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
 sed -i '' "s|\[\[DB_PID_FILE\]\]|\/var\/db\/mysql\/JAILNAME.pid|" $CONFIGS_PATH/$DB_CNF
-
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/db_server_my.cnf /var/db/mysql/my.cnf
-
-#socket
-#  DB_SOCKET="/tmp/mysql.sock"
-#  docker: /var/run/mysqld/mysqld.sock
-#  freenas: /tmp/mysql.sock
-#DB_BASEDIR
-#  docker: /usr
-#  freenas: /usr/local
-#DB_DATADIR
-#  docker: /var/lib/mysql
-#  freenas: /var/db/mysql
-#DB_LC_MESSAGES_DIR
-#  docker: /usr/share/mysql
-#  freenas:
-#DB_PID_FILE
-#  docker: /var/run/mysqld/mysqld.pid
-#  freenas: /var/db/mysql/JAILNAME.pid
 
 iocage exec ${JAIL_NAME} sed -i '' "s/yourhostnamehere/${HOST_NAME}/" /usr/local/etc/apache24/Includes/${HOST_NAME}.conf
 iocage exec ${JAIL_NAME} sed -i '' "s/jailiphere/${JAIL_IP}/" /usr/local/etc/apache24/Includes/${HOST_NAME}.conf
