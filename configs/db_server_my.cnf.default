@@ -1,3 +1,20 @@
+#socket
+#  DB_SOCKET="/tmp/mysql.sock"
+#  docker: /var/run/mysqld/mysqld.sock
+#  freenas: /tmp/mysql.sock
+#DB_BASEDIR
+#  docker: /usr
+#  freenas: /usr/local
+#DB_DATADIR
+#  docker: /var/lib/mysql
+#  freenas: /var/db/mysql
+#DB_LC_MESSAGES_DIR
+#  docker: /usr/share/mysql
+#  freenas:
+#DB_PID_FILE
+#  docker: /var/run/mysqld/mysqld.pid
+#  freenas: /var/db/mysql/JAILNAME.pid
+
 [client]
 port            = 3306
 socket          = [[DB_SOCKET]]
@@ -25,7 +42,8 @@ read_rnd_buffer_size    = 1M
 #net_buffer_length = 2K
 #thread_stack = 240K
 #skip-networking
-#server-id       = 1
+#  ref: automatically to prevent remote connections. https://dev.mysql.com/doc/refman/8.0/en/server-options.html
+#server-id = 1
 #end unique settings from freenas
 
 #directories synthesis
@@ -127,7 +145,7 @@ quote-names
 key_buffer_size = 16M
 sort_buffer_size = 16M
 
-[myisamchk]
+[isamchk]
 key_buffer_size = 16M
 sort_buffer_size = 16M
 
