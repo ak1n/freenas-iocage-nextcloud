@@ -5,11 +5,12 @@ socket          = [[DB_SOCKET]]
 default-character-set = utf8mb4
 
 [mysqld_safe]
-socket          = /tmp/mysql.sock
+socket          = [[DB_SOCKET]]
 nice            = 0
 
 [mysqld]
 port            = 3306
+socket          = [[DB_SOCKET]]
 skip-external-locking
 
 #common but using larger docker values for:
