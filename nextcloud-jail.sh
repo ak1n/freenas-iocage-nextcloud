@@ -233,24 +233,24 @@ fi
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/www.conf /usr/local/etc/php-fpm.d/
 
 #mariadb/mysql handling
-iocage exec ${JAIL_NAME} cp -f /usr/local/share/mysql/my-small.cnf /var/db/mysql/my.cnf
+#iocage exec ${JAIL_NAME} cp -f /usr/local/share/mysql/my-small.cnf /var/db/mysql/my.cnf
 #iocage exec ${JAIL_NAME} "echo '' >> /var/db/mysql/my.cnf"
 #iocage exec ${JAIL_NAME} "echo '[client-server]' >> /var/db/mysql/my.cnf"
 #iocage exec ${JAIL_NAME} "echo '!include /var/db/mysql/db_server_my.cnf' >> /var/db/mysql/my.cnf"
 
-#cp "$CONFIGS_PATH/$DB_CNF.default" $CONFIGS_PATH/$DB_CNF
-#sed -i '' "s|\[\[DB_SOCKET\]\]|\/tmp\/mysql.sock|g" $CONFIGS_PATH/$DB_CNF
-#sed -i '' "s|\[\[DB_BASEDIR\]\]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
-#sed -i '' "s|\[\[DB_DATADIR\]\]|\/var\/db\/mysql|" $CONFIGS_PATH/$DB_CNF
-#sed -i '' "s|\[\[DB_LC_MESSAGES_DIR\]\]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
-#sed -i '' "s|\[\[DB_PID_FILE\]\]|\/var\/db\/mysql\/JAILNAME.pid|" $CONFIGS_PATH/$DB_CNF
-#iocage exec ${JAIL_NAME} cp -f /mnt/configs/db_server_my.cnf /var/db/mysql/my.cnf
+cp "$CONFIGS_PATH/$DB_CNF.default" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|\[\[DB_SOCKET\]\]|\/tmp\/mysql.sock|g" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|\[\[DB_BASEDIR\]\]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|\[\[DB_DATADIR\]\]|\/var\/db\/mysql|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|\[\[DB_LC_MESSAGES_DIR\]\]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|\[\[DB_PID_FILE\]\]|\/var\/db\/mysql\/JAILNAME.pid|" $CONFIGS_PATH/$DB_CNF
+iocage exec ${JAIL_NAME} cp -f /mnt/configs/db_server_my.cnf /var/db/mysql/my.cnf
 
 iocage exec ${JAIL_NAME} sed -i '' "s/yourhostnamehere/${HOST_NAME}/" /usr/local/etc/apache24/Includes/${HOST_NAME}.conf
 iocage exec ${JAIL_NAME} sed -i '' "s/jailiphere/${JAIL_IP}/" /usr/local/etc/apache24/Includes/${HOST_NAME}.conf
 iocage exec ${JAIL_NAME} sed -i '' "s/yourhostnamehere/${HOST_NAME}/" /usr/local/etc/apache24/httpd.conf
 iocage exec ${JAIL_NAME} sed -i '' "s/#skip-networking/skip-networking/" /var/db/mysql/my.cnf
-#iocage exec ${JAIL_NAME} sed -i '' "s/#server-id/server-id/" /var/db/mysql/my.cnf
+iocage exec ${JAIL_NAME} sed -i '' "s/#server-id/server-id/" /var/db/mysql/my.cnf
 iocage exec ${JAIL_NAME} sed -i '' "s|mytimezone|${TIME_ZONE}|" /usr/local/etc/php.ini
 # iocage exec ${JAIL_NAME} openssl dhparam -out /usr/local/etc/pki/tls/private/dhparams_4096.pem 4096
 iocage restart ${JAIL_NAME}
