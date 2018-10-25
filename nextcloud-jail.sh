@@ -49,6 +49,7 @@ SCRIPT=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 . $SCRIPTPATH/nextcloud-config
 CONFIGS_PATH=$SCRIPTPATH/configs
+DB_CNF="db_server_my.cnf"
 DB_ROOT_PASSWORD=$(openssl rand -base64 16)
 DB_PASSWORD=$(openssl rand -base64 16)
 ADMIN_PASSWORD=$(openssl rand -base64 12)
@@ -215,12 +216,12 @@ iocage exec ${JAIL_NAME} cp -f /mnt/configs/www.conf /usr/local/etc/php-fpm.d/
 #iocage exec ${JAIL_NAME} "echo '' >> /var/db/mysql/my.cnf"
 #iocage exec ${JAIL_NAME} "echo '[client-server]' >> /var/db/mysql/my.cnf"
 #iocage exec ${JAIL_NAME} "echo '!include /var/db/mysql/db_server_my.cnf' >> /var/db/mysql/my.cnf"
-cp $CONFIGS_PATH/db_server_my.cnf.default db_server_my.cnf
-sed -i '' "s|[[DB_SOCKET]]|/tmp/mysql.sock|" db_server_my.cnf
-sed -i '' "s|[[DB_BASEDIR]]|/usr/local|" db_server_my.cnf
-sed -i '' "s|[[DB_DATADIR]]|/var/db/mysql|" db_server_my.cnf
-sed -i '' "s|[[DB_LC_MESSAGES_DIR]]|/usr/local|"
-sed -i '' "s|[[DB_PID_FILE]]|/var/db/mysql/JAILNAME.pid|" db_server_my.cnf
+cp "$CONFIGS_PATH/$DB_CNF.default" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|[[DB_SOCKET]]|\/tmp\/mysql.sock|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|[[DB_BASEDIR]]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|[[DB_DATADIR]]|\/var\/db\/mysql|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|[[DB_LC_MESSAGES_DIR]]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|[[DB_PID_FILE]]|\/var\/db\/mysql\/JAILNAME.pid|" $CONFIGS_PATH/$DB_CNF
 
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/db_server_my.cnf /var/db/mysql/my.cnf
 
