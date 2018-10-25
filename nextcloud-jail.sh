@@ -217,11 +217,11 @@ iocage exec ${JAIL_NAME} cp -f /mnt/configs/www.conf /usr/local/etc/php-fpm.d/
 #iocage exec ${JAIL_NAME} "echo '[client-server]' >> /var/db/mysql/my.cnf"
 #iocage exec ${JAIL_NAME} "echo '!include /var/db/mysql/db_server_my.cnf' >> /var/db/mysql/my.cnf"
 cp "$CONFIGS_PATH/$DB_CNF.default" $CONFIGS_PATH/$DB_CNF
-sed -i '' "s|[[DB_SOCKET]]|\/tmp\/mysql.sock|" $CONFIGS_PATH/$DB_CNF
-sed -i '' "s|[[DB_BASEDIR]]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
-sed -i '' "s|[[DB_DATADIR]]|\/var\/db\/mysql|" $CONFIGS_PATH/$DB_CNF
-sed -i '' "s|[[DB_LC_MESSAGES_DIR]]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
-sed -i '' "s|[[DB_PID_FILE]]|\/var\/db\/mysql\/JAILNAME.pid|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|\[\[DB_SOCKET\]\]|\/tmp\/mysql.sock|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|\[\[DB_BASEDIR\]\]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|\[\[DB_DATADIR\]\]|\/var\/db\/mysql|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|\[\[DB_LC_MESSAGES_DIR\]\]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|\[\[DB_PID_FILE\]\]|\/var\/db\/mysql\/JAILNAME.pid|" $CONFIGS_PATH/$DB_CNF
 
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/db_server_my.cnf /var/db/mysql/my.cnf
 
