@@ -14,7 +14,7 @@
 #rm -R /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/db/*; \
 #rm -R /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/*; \
 #rm /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/.htaccess; \
-#rm /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/.ocdata \
+#rm /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/.ocdata; \
 #iocage list; \
 #ls -al /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/; \
 #ls -al /mnt/xpool/PARENT_NEXTCLOUD_DATASET/db; \
