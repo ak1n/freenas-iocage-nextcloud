@@ -3,24 +3,6 @@
 # modified for mysql parameters: https://github.com/ak1n/freenas-iocage-nextcloud
 # from: https://github.com/danb35/freenas-iocage-nextcloud
 
-###########################################
-# to reset & try the script again the following may be used
-#  caution re deleting wrong data: check paths, jailnames, etc.
-#
-#iocage destroy JAIL_NAME; \
-#iocage list; \
-#ls -al /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/; \
-#ls -al /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/db; \
-#rm -R /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/db/*; \
-#rm -R /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/*; \
-#rm /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/.htaccess; \
-#rm /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/.ocdata; \
-#iocage list; \
-#ls -al /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/; \
-#ls -al /mnt/xpool/PARENT_NEXTCLOUD_DATASET/db; \
-#/root/freenas-iocage-nextcloud/nextcloud-jail.sh
-###########################################
-
 # Check for root privileges
 if ! [ $(id -u) = 0 ]; then
    echo "This script must be run with root privileges"
@@ -129,6 +111,45 @@ if [ "$(ls -A $DB_PATH)" ]; then
   echo "DB_PATH must be empty, otherwise this script will break your existing database."
   exit 1
 fi
+#end basic validation
+
+function reset() {
+  echo "in reset function"
+  ###########################################
+  # to reset & try the script again the following may be used
+  #  caution re deleting wrong data: check paths, jailnames, etc.
+  #
+  #iocage destroy JAIL_NAME; \
+  #iocage list; \
+  #ls -al /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/; \
+  #ls -al /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/db; \
+  #rm -R /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/db/*; \
+  #rm -R /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/*; \
+  #rm /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/.htaccess; \
+  #rm /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/.ocdata; \
+  #iocage list; \
+  #ls -al /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/; \
+  #ls -al /mnt/xpool/PARENT_NEXTCLOUD_DATASET/db; \
+  #/root/freenas-iocage-nextcloud/nextcloud-jail.sh
+  ###########################################
+  exit 1
+}
+
+while getopts "rh" opt; do
+  case ${opt} in
+    h )
+      echo "provide no argument to run script, or -r to reset. reset will destroy jail & delete all contents of associated datasets"
+      ;;
+    r )
+      echo "reset called"
+      reset
+      ;;
+    \? )
+      echo "Invalid Option: -$OPTARG" 1>&2
+      EXITING=1
+      ;;
+  esac
+done
 
 
 cat <<__EOF__ >/tmp/pkg.json
