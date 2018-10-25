@@ -113,7 +113,7 @@ if [ "$(ls -A $DB_PATH)" ]; then
 fi
 #end basic validation
 
-function reset() {
+reset() {
   echo "in reset function"
   ###########################################
   # to reset & try the script again the following may be used
