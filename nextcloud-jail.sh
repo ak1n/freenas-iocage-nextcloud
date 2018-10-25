@@ -243,7 +243,7 @@ sed -i '' "s|\[\[DB_SOCKET\]\]|\/tmp\/mysql.sock|g" $CONFIGS_PATH/$DB_CNF
 sed -i '' "s|\[\[DB_BASEDIR\]\]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
 sed -i '' "s|\[\[DB_DATADIR\]\]|\/var\/db\/mysql|" $CONFIGS_PATH/$DB_CNF
 sed -i '' "s|\[\[DB_LC_MESSAGES_DIR\]\]|\/usr\/local|" $CONFIGS_PATH/$DB_CNF
-sed -i '' "s|\[\[DB_PID_FILE\]\]|\/var\/db\/mysql\/JAILNAME.pid|" $CONFIGS_PATH/$DB_CNF
+sed -i '' "s|\[\[DB_PID_FILE\]\]|\/var\/db\/mysql\/${JAIL_NAME}.pid|" $CONFIGS_PATH/$DB_CNF
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/db_server_my.cnf /var/db/mysql/my.cnf
 
 iocage exec ${JAIL_NAME} sed -i '' "s/yourhostnamehere/${HOST_NAME}/" /usr/local/etc/apache24/Includes/${HOST_NAME}.conf
