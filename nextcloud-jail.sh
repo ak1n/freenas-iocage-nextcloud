@@ -1,6 +1,25 @@
 #!/bin/sh
-# Build an iocage jail under FreeNAS 11.1 using the current release of Nextcloud 14
-# https://github.com/danb35/freenas-iocage-nextcloud
+# Build an iocage jail under FreeNAS 11.2 using the current release of Nextcloud 14
+# modified for mysql parameters: https://github.com/ak1n/freenas-iocage-nextcloud
+# from: https://github.com/danb35/freenas-iocage-nextcloud
+
+###########################################
+# to reset & try the script again the following may be used
+#  caution re deleting wrong data: check paths, jailnames, etc.
+#
+#iocage destroy JAIL_NAME; \
+#iocage list; \
+#ls -al /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/; \
+#ls -al /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/db; \
+#rm -R /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/db/*; \
+#rm -R /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/*; \
+#rm /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/.htaccess; \
+#rm /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/.ocdata \
+#iocage list; \
+#ls -al /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/; \
+#ls -al /mnt/xpool/PARENT_NEXTCLOUD_DATASET/db; \
+#/root/freenas-iocage-nextcloud/nextcloud-jail.sh
+###########################################
 
 # Check for root privileges
 if ! [ $(id -u) = 0 ]; then
