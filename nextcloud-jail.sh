@@ -143,17 +143,18 @@ reset() {
   echo "      files/.ocdata: rm $POOL_PATH/$JAIL_NAME/files/.ocdata"
 
   #manually verify successful operations
+  echo ""
   read -p "Continue w deletion of above (y/n)?" choice
   case "$choice" in
-    y|Y ) echo "yes"
+    y|Y ) echo "deleting jail & associated dataset data as above..."
     #perform operations: rm jail & associated data
-    #iocage destroy $JAIL_NAME;
-    #rm -R -v $POOL_PATH/$JAIL_NAME/db/*;
-    #rm -R -v $POOL_PATH/$JAIL_NAME/files/*;
-    #rm $POOL_PATH/$JAIL_NAME/files/.htaccess;
-    #rm $POOL_PATH/$JAIL_NAME/files/.ocdata;
+    iocage destroy $JAIL_NAME;
+    rm -R -v $POOL_PATH/$JAIL_NAME/db/*;
+    rm -R -v $POOL_PATH/$JAIL_NAME/files/*;
+    rm $POOL_PATH/$JAIL_NAME/files/.htaccess;
+    rm $POOL_PATH/$JAIL_NAME/files/.ocdata;
     ;;
-    n|N ) echo "no...aborting"; exit 1;;
+    n|N ) echo "no...aborting script"; exit 1;;
     * ) echo "invalid input";;
   esac
 
