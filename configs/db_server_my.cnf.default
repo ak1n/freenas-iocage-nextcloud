@@ -18,7 +18,6 @@
 [client]
 port            = 3306
 socket          = [[DB_SOCKET]]
-#following from nextcloud recs
 default-character-set = utf8mb4
 
 [mysqld_safe]
@@ -41,19 +40,20 @@ read_rnd_buffer_size    = 1M
 #unique setting items from freenas
 #net_buffer_length = 2K
 #thread_stack = 240K
-#skip-networking
 #  ref: automatically to prevent remote connections. https://dev.mysql.com/doc/refman/8.0/en/server-options.html
+#following 2 will be uncommented by script
+#skip-networking
 #server-id = 1
 #end unique settings from freenas
 
 #directories synthesis
 #tmpdir          = /tmp
-#lc_messages     = en_US
+lc_messages     = en_US
 #basedir         = [[DB_BASEDIR]]
 #datadir         = [[DB_DATADIR]]
 #lc_messages_dir  = [[DB_LC_MESSAGES_DIR]]
 #pid_file        = [[DB_PID_FILE]]
-#slow_query_log_file = /var/log/mysql/slow.log
+slow_query_log_file = /var/log/mysql_slow.log
 
 #unique from nextcloud recs (note were in [server block])
 innodb_buffer_pool_instances = 1
@@ -62,7 +62,7 @@ innodb_max_dirty_pages_pct = 90
 query_cache_type = 1
 query_cache_min_res_unit = 2k
 slow-query-log = 1
-slow-query-log-file = /var/log/mysql/slow.log
+#slow-query-log-file = /var/log/mysql/slow.log
 
 #unique from nextcloud recs (note were in [mysqld] block)
 character-set-server = utf8mb4
