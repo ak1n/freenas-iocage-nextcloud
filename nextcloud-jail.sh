@@ -111,6 +111,9 @@ fi
 reset() {
   # to reset & try the script again the following may be used
   #  caution re deleting wrong data: check paths, jailnames, etc.
+  #note: if error {JAIL} has dependent jails (who may also have dependents), use --recursive to destroy: xxx
+  #  use GUI to delete jail
+
   git pull; \
   iocage list; \
   ls -al $POOL_PATH/$JAIL_NAME/files/; \
@@ -184,6 +187,7 @@ fi
 if ! [ -e $DL_PATH/get-acme.sh ]; then
   curl https://get.acme.sh -o $DL_PATH/get-acme.sh
 fi
+echo "downloads completed/verified (nextcloud & get-acme)"
 
 #cat <<__EOF__ >/tmp/pkg.json
 cat <<__EOF__ >$DL_PATH/pkg.json
@@ -353,7 +357,7 @@ iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextclou
 iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ maintenance:update:htaccess'
 iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ app:enable encryption'
 iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ encryption:enable'
-iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ encryption:disable'
+#iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ encryption:disable'
 iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ background:cron'
 iocage exec ${JAIL_NAME} crontab -u www /mnt/configs/www-crontab
 
