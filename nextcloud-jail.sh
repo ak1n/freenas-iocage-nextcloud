@@ -148,18 +148,27 @@ reset() {
   echo "      files/.htaccess: rm $POOL_PATH/$JAIL_NAME/files/.htaccess"
   echo "      files/.ocdata: rm $POOL_PATH/$JAIL_NAME/files/.ocdata"
 
-
-  #perform operations: rm jail & associated data
-  #iocage destroy $JAIL_NAME;
-  #rm -R -v $POOL_PATH/$JAIL_NAME/db/*;
-  #rm -R -v $POOL_PATH/$JAIL_NAME/files/*;
-  #rm $POOL_PATH/$JAIL_NAME/files/.htaccess;
-  #rm $POOL_PATH/$JAIL_NAME/files/.ocdata;
-
   #manually verify successful operations
+  read -p "Continue w deletion of above (y/n)?" choice
+  case "$choice" in
+    y|Y ) echo "yes"
+    #perform operations: rm jail & associated data
+    #iocage destroy $JAIL_NAME;
+    #rm -R -v $POOL_PATH/$JAIL_NAME/db/*;
+    #rm -R -v $POOL_PATH/$JAIL_NAME/files/*;
+    #rm $POOL_PATH/$JAIL_NAME/files/.htaccess;
+    #rm $POOL_PATH/$JAIL_NAME/files/.ocdata;
+    ;;
+    n|N ) echo "no...aborting"; exit 1;;
+    * ) echo "invalid input";;
+  esac
+
+  echo "post deletion jail-list & dataset contents:"
   iocage list;
   ls -al $POOL_PATH/$JAIL_NAME/files/;
   ls -al $POOL_PATH/$JAIL_NAME/db;
+
+  echo "done with jail/dataset deletion, rerunning script..."
 
   #re-run script w/o flag
   $SCRIPTPATH/nextcloud-jail.sh
