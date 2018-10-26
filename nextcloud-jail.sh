@@ -109,7 +109,6 @@ fi
 #end basic validation
 
 reset() {
-  echo "in reset function"
   # to reset & try the script again the following may be used
   #  caution re deleting wrong data: check paths, jailnames, etc.
   git pull; \
@@ -203,7 +202,7 @@ cat <<__EOF__ >$DL_PATH/pkg.json
 }
 __EOF__
 
-iocage create --name "${JAIL_NAME}" -p $DL_PATH/pkg.json -r ${RELEASE} ip4_addr="${INTERFACE}|${JAIL_IP}/24" defaultrouter="${DEFAULT_GW_IP}" boot="on" host_hostname="${JAIL_NAME}" vnet="${VNET}"
+iocage create --name "${JAIL_NAME}" -p "${DL_PATH}/pkg.json" -r ${RELEASE} ip4_addr="${INTERFACE}|${JAIL_IP}/24" defaultrouter="${DEFAULT_GW_IP}" boot="on" host_hostname="${JAIL_NAME}" vnet="${VNET}"
 #rm /tmp/pkg.json
 
 #what is up with these chown names?
@@ -222,7 +221,7 @@ iocage fstab -a ${JAIL_NAME} ${PORTS_PATH}/db /var/db/portsnap nullfs rw 0 0
 iocage fstab -a ${JAIL_NAME} ${FILES_PATH} /mnt/files nullfs rw 0 0
 iocage fstab -a ${JAIL_NAME} ${DB_PATH}  /var/db/mysql  nullfs  rw  0  0
 iocage fstab -a ${JAIL_NAME} ${CONFIGS_PATH} /mnt/configs nullfs rw 0 0
-iocage fstab -a ${JAIL_NAME} ${$DL_PATH} /mnt/download nullfs rw 0 0
+iocage fstab -a ${JAIL_NAME} ${DL_PATH} /mnt/download nullfs rw 0 0
 iocage exec ${JAIL_NAME} chown -R www:www /mnt/files
 iocage exec ${JAIL_NAME} chmod -R 770 /mnt/files
 iocage exec ${JAIL_NAME} "if [ -z /usr/ports ]; then portsnap fetch extract; else portsnap auto; fi"
