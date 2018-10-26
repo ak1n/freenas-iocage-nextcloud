@@ -140,14 +140,14 @@ max_allowed_packet      = 16M
 #docker uniqe:
 quote-names
 
-#table check synthesis - disabled for testing
-#[myisamchk]
-#key_buffer_size = 16M
-#sort_buffer_size = 16M
+#table check synthesis
+[myisamchk]
+key_buffer_size = 16M
+sort_buffer_size = 16M
 
-#[isamchk]
-#key_buffer_size = 16M
-#sort_buffer_size = 16M
+[isamchk]
+key_buffer_size = 16M
+sort_buffer_size = 16M
 
 #see http://ftp.nchu.edu.tw/MySQL/doc/refman/4.1/en/myisamchk.html
 #myisamchk: works w myisam vs. isamchk works w isam - table types
@@ -156,18 +156,18 @@ quote-names
 #  ergo using myisamchk but increasing buffer size to 16M
 #  given other tables might still use mysiam leaving in params for this as well, w higher buffer size
 
-#following group docker unique - enabled for testing
-[isamchk]
-key_buffer              = 16M
+#following group docker unique
+#[isamchk]
+#key_buffer              = 16M
 
 #following group freenas unique
 #[myisamchk]
 #key_buffer_size = 8M
 #sort_buffer_size = 8M
 
-#from freenas - disabled for testing
-#[mysql]
-#no-auto-rehash
+#from freenas
+[mysql]
+no-auto-rehash
 #https://mariadb.com/kb/en/library/mysql-command-line-client/
 
 #[mysqlhotcopy]

@@ -91,6 +91,8 @@ if [ -z $PORTS_PATH ]; then
   PORTS_PATH="${POOL_PATH}/portsnap"
 fi
 
+# would creating files & db datasets here make sense to ensure proper settings & streamlining?
+
 # Sanity check DB_PATH, FILES_PATH, and PORTS_PATH -- they all have to be different,
 # and can't be the same as POOL_PATH
 if [ "${DB_PATH}" = "${FILES_PATH}" ] || [ "${FILES_PATH}" = "${PORTS_PATH}" ] || [ "${PORTS_PATH}" = "${DB_PATH}" ]
@@ -268,7 +270,7 @@ iocage exec ${JAIL_NAME} cp -f /mnt/configs/php.ini /usr/local/etc/php.ini
 
 #redis conf
 #  nextcloud-snap: https://github.com/nextcloud/nextcloud-snap/blob/master/src/redis/config/redis.conf
-iocage exec ${JAIL_NAME} cp -f /mnt/configs/redis.conf.original /usr/local/etc/redis.conf
+iocage exec ${JAIL_NAME} cp -f /mnt/configs/redis.conf /usr/local/etc/redis.conf
 
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/001_mod_php.conf /usr/local/etc/apache24/modules.d/001_mod_php.conf
 if [ $NO_CERT -eq 1 ]; then
