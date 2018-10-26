@@ -176,6 +176,8 @@ if [ "$(ls -A $DB_PATH)" ]; then
   exit 1
 fi
 
+#consider here download files outside of jail for faster resets -> then mount into jail
+
 cat <<__EOF__ >/tmp/pkg.json
 {
   "pkgs":[
