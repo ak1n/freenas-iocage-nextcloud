@@ -109,24 +109,6 @@ fi
 
 reset() {
   echo "in reset function"
-  ###########################################
-  # to reset & try the script again the following may be used
-  #  caution re deleting wrong data: check paths, jailnames, etc.
-  #
-  #iocage destroy JAIL_NAME; \
-  #iocage list; \
-  #ls -al /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/; \
-  #ls -al /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/db; \
-  #rm -R /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/db/*; \
-  #rm -R /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/*; \
-  #rm /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/.htaccess; \
-  #rm /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/.ocdata; \
-  #iocage list; \
-  #ls -al /mnt/POOL_NAME/PARENT_NEXTCLOUD_DATASET/files/; \
-  #ls -al /mnt/xpool/PARENT_NEXTCLOUD_DATASET/db; \
-  #/root/freenas-iocage-nextcloud/nextcloud-jail.sh
-  ###########################################
-
   # to reset & try the script again the following may be used
   #  caution re deleting wrong data: check paths, jailnames, etc.
   git pull; \
@@ -135,6 +117,7 @@ reset() {
   ls -al $POOL_PATH/$JAIL_NAME/db;
 
   #user input here to verify
+  echo "--------------------------------------------"
   echo "confirm deletion of the following:"
   echo "    jail:               # iocage destroy $JAIL_NAME"
   echo "    db data:            # rm -R -v $POOL_PATH/$JAIL_NAME/db/*"
@@ -164,7 +147,7 @@ reset() {
   ls -al $POOL_PATH/$JAIL_NAME/db;
 
   echo "done with jail/dataset deletion, rerunning script..."
-
+  echo "--------------------------------------------"
   #re-run script w/o flag
   $SCRIPTPATH/nextcloud-jail.sh
   exit 1
@@ -264,7 +247,7 @@ fi
 # Copy and edit pre-written config files
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/httpd.conf /usr/local/etc/apache24/httpd.conf
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/php.ini /usr/local/etc/php.ini
-#iocage exec ${JAIL_NAME} cp -f /mnt/configs/redis.conf /usr/local/etc/redis.conf
+iocage exec ${JAIL_NAME} cp -f /mnt/configs/redis.conf.socket /usr/local/etc/redis.conf
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/001_mod_php.conf /usr/local/etc/apache24/modules.d/001_mod_php.conf
 if [ $NO_CERT -eq 1 ]; then
   iocage exec ${JAIL_NAME} cp -f /mnt/configs/nextcloud-nossl.conf /usr/local/etc/apache24/Includes/${HOST_NAME}.conf
@@ -331,11 +314,11 @@ iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextclou
 iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set memcache.locking --value="\OC\Memcache\Redis"'
 iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set memcache.distributed --value="\OC\Memcache\Redis"'
 #redis as socket params
-#iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis host --value="/tmp/redis.sock"'
-#iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis port --value=0 --type=integer'
+iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis host --value="/tmp/redis.sock"'
+iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis port --value=0 --type=integer'
 #vs redis on port 6379 params
-iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis host --value="localhost"'
-iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis port --value=6379 --type=integer'
+#iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis host --value="localhost"'
+#iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis port --value=6379 --type=integer'
 
 iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis timeout --value=0 --type=integer'
 #iocage exec ${JAIL_NAME} su -m www -c 'php /usr/local/www/apache24/data/nextcloud/occ config:system:set redis dbindex --value=0 --type=integer'

@@ -1,0 +1,6 @@
+#following seems minimum necessary to switch to socket from tcp
+bind 127.0.0.1
+port 0
+unixsocket /tmp/redis.sock
+unixsocketperm 777
+#end socket minimum
