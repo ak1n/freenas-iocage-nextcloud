@@ -247,7 +247,11 @@ fi
 # Copy and edit pre-written config files
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/httpd.conf /usr/local/etc/apache24/httpd.conf
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/php.ini /usr/local/etc/php.ini
-iocage exec ${JAIL_NAME} cp -f /mnt/configs/redis.conf.socket /usr/local/etc/redis.conf
+
+#redis conf
+#  nextcloud-snap: https://github.com/nextcloud/nextcloud-snap/blob/master/src/redis/config/redis.conf
+iocage exec ${JAIL_NAME} cp -f /mnt/configs/redis.conf.original /usr/local/etc/redis.conf
+
 iocage exec ${JAIL_NAME} cp -f /mnt/configs/001_mod_php.conf /usr/local/etc/apache24/modules.d/001_mod_php.conf
 if [ $NO_CERT -eq 1 ]; then
   iocage exec ${JAIL_NAME} cp -f /mnt/configs/nextcloud-nossl.conf /usr/local/etc/apache24/Includes/${HOST_NAME}.conf
