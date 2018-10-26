@@ -136,14 +136,14 @@ reset() {
 
   #user input here to verify
   echo "confirm deletion of the following:"
-  echo "    jail: iocage destroy $JAIL_NAME"
-  echo "    db data: rm -R -v $POOL_PATH/$JAIL_NAME/db/*"
-  echo "    files data: rm -R -v $POOL_PATH/$JAIL_NAME/files/*"
-  echo "      files/.htaccess: rm $POOL_PATH/$JAIL_NAME/files/.htaccess"
-  echo "      files/.ocdata: rm $POOL_PATH/$JAIL_NAME/files/.ocdata"
+  echo "    jail:               # iocage destroy $JAIL_NAME"
+  echo "    db data:            # rm -R -v $POOL_PATH/$JAIL_NAME/db/*"
+  echo "    files data:         # rm -R -v $POOL_PATH/$JAIL_NAME/files/*"
+  echo "     files/.htaccess:   # rm $POOL_PATH/$JAIL_NAME/files/.htaccess"
+  echo "     files/.ocdata:     # rm $POOL_PATH/$JAIL_NAME/files/.ocdata"
 
   #manually verify successful operations
-  echo ""
+  echo "--------------------------------------------"
   read -p "Continue w deletion of above (y/n)?" choice
   case "$choice" in
     y|Y ) echo "deleting jail & associated dataset data as above..."
