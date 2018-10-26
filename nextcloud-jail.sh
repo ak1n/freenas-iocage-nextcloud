@@ -195,7 +195,7 @@ echo "downloads completed/verified (nextcloud & get-acme)"
 cat <<__EOF__ >$DL_PATH/pkg.json
 {
   "pkgs":[
-  "nano","curl","sudo","mariadb101-server","redis","php72-ctype",
+  "nano","curl","sudo","mariadb103-server","redis","php72-ctype",
   "php72-dom","php72-gd","php72-iconv","php72-json","php72-mbstring",
   "php72-posix","php72-simplexml","php72-xmlreader","php72-xmlwriter",
   "php72-zip","php72-zlib","php72-pdo_mysql","php72-hash","php72-xml",
