@@ -31,6 +31,7 @@ SCRIPT=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 . $SCRIPTPATH/nextcloud-config
 CONFIGS_PATH=$SCRIPTPATH/configs
+DL_PATH=$SCRIPTPATH/download
 DB_CNF="db_server_my.cnf"
 DB_ROOT_PASSWORD=$(openssl rand -base64 16)
 DB_PASSWORD=$(openssl rand -base64 16)
@@ -176,9 +177,17 @@ if [ "$(ls -A $DB_PATH)" ]; then
   exit 1
 fi
 
-#consider here download files outside of jail for faster resets -> then mount into jail
+# save downloads for faster resets - mount them in jail (rather than dl in jail)
+mkdir -p $DL_PATH
+if ! [ -e $DL_PATH/latest-14.tar.bz2 ]; then
+  fetch -o $DL_PATH https://download.nextcloud.com/server/releases/latest-14.tar.bz2
+fi
+if ! [ -e $DL_PATH/get-acme.sh ]; then
+  curl https://get.acme.sh -o $DL_PATH/get-acme.sh
+fi
 
-cat <<__EOF__ >/tmp/pkg.json
+#cat <<__EOF__ >/tmp/pkg.json
+cat <<__EOF__ >$DL_PATH/pkg.json
 {
   "pkgs":[
   "nano","curl","sudo","mariadb101-server","redis","php72-ctype",
@@ -194,8 +203,8 @@ cat <<__EOF__ >/tmp/pkg.json
 }
 __EOF__
 
-iocage create --name "${JAIL_NAME}" -p /tmp/pkg.json -r ${RELEASE} ip4_addr="${INTERFACE}|${JAIL_IP}/24" defaultrouter="${DEFAULT_GW_IP}" boot="on" host_hostname="${JAIL_NAME}" vnet="${VNET}"
-rm /tmp/pkg.json
+iocage create --name "${JAIL_NAME}" -p $DL_PATH/pkg.json -r ${RELEASE} ip4_addr="${INTERFACE}|${JAIL_IP}/24" defaultrouter="${DEFAULT_GW_IP}" boot="on" host_hostname="${JAIL_NAME}" vnet="${VNET}"
+#rm /tmp/pkg.json
 
 #what is up with these chown names?
 mkdir -p ${DB_PATH}/
@@ -207,17 +216,20 @@ mkdir -p ${PORTS_PATH}/db
 iocage exec ${JAIL_NAME} mkdir -p /mnt/files
 iocage exec ${JAIL_NAME} mkdir -p /var/db/mysql
 iocage exec ${JAIL_NAME} mkdir -p /mnt/configs
+iocage exec ${JAIL_NAME} mkdir -p /mnt/download
 iocage fstab -a ${JAIL_NAME} ${PORTS_PATH}/ports /usr/ports nullfs rw 0 0
 iocage fstab -a ${JAIL_NAME} ${PORTS_PATH}/db /var/db/portsnap nullfs rw 0 0
 iocage fstab -a ${JAIL_NAME} ${FILES_PATH} /mnt/files nullfs rw 0 0
 iocage fstab -a ${JAIL_NAME} ${DB_PATH}  /var/db/mysql  nullfs  rw  0  0
 iocage fstab -a ${JAIL_NAME} ${CONFIGS_PATH} /mnt/configs nullfs rw 0 0
+iocage fstab -a ${JAIL_NAME} ${$DL_PATH} /mnt/download nullfs rw 0 0
 iocage exec ${JAIL_NAME} chown -R www:www /mnt/files
 iocage exec ${JAIL_NAME} chmod -R 770 /mnt/files
 iocage exec ${JAIL_NAME} "if [ -z /usr/ports ]; then portsnap fetch extract; else portsnap auto; fi"
 iocage exec ${JAIL_NAME} chsh -s /usr/local/bin/bash root
-iocage exec ${JAIL_NAME} fetch -o /tmp https://download.nextcloud.com/server/releases/latest-14.tar.bz2
-iocage exec ${JAIL_NAME} tar xjf /tmp/latest-14.tar.bz2 -C /usr/local/www/apache24/data/
+#iocage exec ${JAIL_NAME} fetch -o /tmp https://download.nextcloud.com/server/releases/latest-14.tar.bz2
+#iocage exec ${JAIL_NAME} tar xjf /tmp/latest-14.tar.bz2 -C /usr/local/www/apache24/data/
+iocage exec ${JAIL_NAME} tar xjf /mnt/download/latest-14.tar.bz2 -C /usr/local/www/apache24/data/
 iocage exec ${JAIL_NAME} chown -R www:www /usr/local/www/apache24/data/nextcloud/
 iocage exec ${JAIL_NAME} sysrc apache24_enable="YES"
 iocage exec ${JAIL_NAME} sysrc mysql_enable="YES"
@@ -230,9 +242,10 @@ iocage exec ${JAIL_NAME} mkdir -p /usr/local/etc/pki/tls/private/
 if [ $STANDALONE_CERT -eq 1 ] || [ $DNS_CERT -eq 1 ]; then
   iocage exec ${JAIL_NAME} touch /usr/local/etc/pki/tls/private/privkey.pem
   iocage exec ${JAIL_NAME} chmod 600 /usr/local/etc/pki/tls/private/privkey.pem
-  iocage exec ${JAIL_NAME} curl https://get.acme.sh -o /tmp/get-acme.sh
-  iocage exec ${JAIL_NAME} sh /tmp/get-acme.sh
-  iocage exec ${JAIL_NAME} rm /tmp/get-acme.sh
+  #iocage exec ${JAIL_NAME} curl https://get.acme.sh -o /tmp/get-acme.sh
+  #iocage exec ${JAIL_NAME} sh /tmp/get-acme.sh
+  iocage exec ${JAIL_NAME} sh /mnt/download/get-acme.sh
+  #iocage exec ${JAIL_NAME} rm /tmp/get-acme.sh
 
   # Issue certificate.  If standalone mode is selected, issue directly, otherwise call external script to issue cert via DNS validation
   if [ $STANDALONE_CERT -eq 1 ]; then
