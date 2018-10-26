@@ -47,13 +47,13 @@ read_rnd_buffer_size    = 1M
 #end unique settings from freenas
 
 #directories synthesis
-tmpdir          = /tmp
-lc_messages     = en_US
-basedir         = [[DB_BASEDIR]]
-datadir         = [[DB_DATADIR]]
-lc_messages_dir  = [[DB_LC_MESSAGES_DIR]]
-pid_file        = [[DB_PID_FILE]]
-slow_query_log_file = /var/log/mysql/slow.log
+#tmpdir          = /tmp
+#lc_messages     = en_US
+#basedir         = [[DB_BASEDIR]]
+#datadir         = [[DB_DATADIR]]
+#lc_messages_dir  = [[DB_LC_MESSAGES_DIR]]
+#pid_file        = [[DB_PID_FILE]]
+#slow_query_log_file = /var/log/mysql/slow.log
 
 #unique from nextcloud recs (note were in [server block])
 innodb_buffer_pool_instances = 1
