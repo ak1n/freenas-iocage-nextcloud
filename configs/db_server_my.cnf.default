@@ -14,6 +14,9 @@
 #DB_PID_FILE
 #  docker: /var/run/mysqld/mysqld.pid
 #  freenas: /var/db/mysql/JAILNAME.pid
+#DB_BINLOG
+#  docker
+#  freenas: JAILNAME-bin
 
 [client]
 port            = 3306
@@ -70,10 +73,11 @@ collation-server = utf8mb4_general_ci
 transaction_isolation = READ-COMMITTED
 binlog_format = ROW
 #following line necessary for mariadb-103-server
-log_bin
-#following line crashes mariadb-103-server
+log_bin=[[DB_BINLOG]]-bin
+
+#following 2 lines crashes mariadb-103-server
 #innodb_large_prefix=on
-innodb_file_format=barracuda
+#innodb_file_format=barracuda
 
 #freenas directories obtained from CLI (not in config)
 #basedir         = /usr/local
