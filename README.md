@@ -6,9 +6,10 @@
   * allow easier jail/data reset for testing modifications of configs
   * tweak database/cache/locking settings to try and reflect those more recommended by nextcloud
 * why: nextcloud seems to have some critical errors with filelocking when dealing with large numbers of files - these errors are different with different setups. rapid deployment of nextcloud testing environments might help debug this.
-* however: after days of testing I cannot get resolve the errors, so consider this non-production-ready and will probably migrate to a different platform rather than nextcloud
+* however: after days of testing I cannot get resolve the errors
 
-see https://gitlab.com/deepthought/nextcloud-docker
+* note that errors evident in freenas are different than those using more standardized docker installs (deadlocks w freenas vs. "is locked" errors in docker)
+* for docker-comparison see docker setup script at https://gitlab.com/deepthought/nextcloud-docker/tree/latest
 
 ## description
 Script to create an iocage jail on FreeNAS for the latest Nextcloud 14 release, including Apache 2.4.x, MariaDB, and Let's Encrypt
